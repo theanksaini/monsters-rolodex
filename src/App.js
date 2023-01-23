@@ -31,13 +31,29 @@ class App extends Component {
       )
     );
   }
+  //Making this method is part of optimization.Not to re intilize the annyonmous function again and again.
+  onSearchChange = (event) => {
+    // console.log(event.target.value);
+    // console.log({ startingArray: this.state.monsters }); Array state at end is not the whole list
+    const searchField = event.target.value.toLocaleLowerCase();
+    // this above gives us the string which is typed in the search bar
+
+    this.setState(() => {
+      return { searchField };
+    });
+  };
+
   // Program flow> First constructor then render this component this mount, then state is updated and again re renders.
   //array.map() Lets us create new array based on our existing array.
   render() {
     console.log("render");
+
+    const { monsters, searchField } = this.state;
+    const { onSearchChange } = this;
+
     //Method to filter the monsters as per the user search
-    const filterMonsters = this.state.monsters.filter((monster) => {
-      return monster.name.toLocaleLowerCase().includes(this.state.searchField);
+    const filterMonsters = monsters.filter((monster) => {
+      return monster.name.toLocaleLowerCase().includes(searchField);
       //Includes is case sensitive and .filter gives us new array
     });
 
@@ -47,16 +63,7 @@ class App extends Component {
           className="search-box"
           type="search"
           placeholder="Search Monsters"
-          onChange={(event) => {
-            // console.log(event.target.value);
-            // console.log({ startingArray: this.state.monsters }); Array state at end is not the whole list
-            const searchField = event.target.value.toLocaleLowerCase();
-            // this above gives us the string which is typed in the search bar
-
-            this.setState(() => {
-              return { searchField };
-            });
-          }}
+          onChange={onSearchChange}
         />
         {filterMonsters.map((monster) => {
           return (
